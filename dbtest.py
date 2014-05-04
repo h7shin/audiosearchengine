@@ -15,14 +15,14 @@ if __name__ == '__main__':
     
     haystacks = []   # Database Structure
 
-    db_size = 10     # Set Database Size
+    db_size = 300     # Set Database Size
     
     for i in range(db_size):
         haystacks.append(haystack(i,button_wavsound.get_data()))
     
     haystacks.append(haystack("7",[1, 2, 3, 4, 5]))
         
-    button_needle_factory = needlestorage(button_wavsound,1000,100)
+    button_needle_factory = needlestorage(button_wavsound,1000,50)
     emissions = []
     
     haystackmap = haystackmapper(haystacks)
@@ -81,7 +81,7 @@ if __name__ == '__main__':
         needle = button_needle_factory.pop_unused_needle()
         if (needle == []):
             break
-        emissions = emissions + haystackmap.mapper(needle)
+        emissions += haystackmap.mapper(needle)
         i -= 1
         print("Total So Far: ",len(emissions))
     

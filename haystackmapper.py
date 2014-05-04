@@ -13,21 +13,28 @@ class haystackmapper:
         self.haystacks = haystacks
     def mapper (self, needle):
         emission = []
+        len_needle = len(needle)
         for haystack in self.haystacks:
-            for i in range(len(haystack.get_data())):
+            for i in range(haystack.get_length()):
                 data = haystack.get_data()
-                subsequence = data[i:i + len(needle)]
+                
+                #get subsequence length
+                len_sub = min(len_needle, (haystack.get_length() - i*len_needle)) 
+                
+                subsequence = data[i:i + len_needle]
                 nomatch = 0
-                difference = []
-                if len(subsequence) == 1:
+                #difference = []
+                if len_sub <= 1:
                     nomatch = 1
                     break
-                for i in range(min(len(subsequence),len(needle))):
+                for i in range(min(len_sub,len_needle)):
                     if abs(needle[i]) > 100 :
-                        difference.append(abs(subsequence[i] - needle[i])/needle[i] )
+                        pass
+                        # Uncomment this: difference.append(abs(subsequence[i] - needle[i])/needle[i] )
                     else:
-                        difference.append(0)
-                    if abs(needle[i]) > 100 and abs(subsequence[i] - needle[i])/abs(needle[i]) > 0.05: 
+                        pass
+                        # Uncomment this: difference.append(0)
+                    if abs(needle[i]) > 100 and abs((subsequence[i] - needle[i])/(needle[i])) > 0.05: 
                         # allow slight variation
                         nomatch = 1
                         break
