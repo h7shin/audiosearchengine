@@ -1,7 +1,7 @@
 from haystackmapper import haystackmapper 
 from haystackreducer import haystackreducer
 from haystack import haystack
-from needlefactory import needlefactory
+from needlestorage import needlestorage
 from wavsound import wavsound
 from multiprocessing import Pool, Process, Manager
 from calltomapper import calltomapper

@@ -1,8 +1,8 @@
 from wavsound import wavsound
 
-class needlefactory:
+class needlestorage:
     
-    """needlefactory object generates needles (subsequence sample) of wavsound
+    """needlestorage object generates needles (subsequence sample) of wavsound
     object data based on number of partitions (num_chunk) and 
     number of samples to be analyzed (limit). The needles/samples are picked
     deterministically so that the data sampled are evenly 

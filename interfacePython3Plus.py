@@ -1,7 +1,7 @@
 from haystackmapper import haystackmapper 
 from haystackreducer import haystackreducer
 from haystack import haystack
-from needlefactory import needlefactory
+from needlestorage import needlestorage
 from wavsound import wavsound
 from multiprocessing import Pool, Process, Manager
 from calltomapper import calltomapper
@@ -25,16 +25,14 @@ def run():
     query_wavsound = wavsound(query)    
     print("\n**Higher number of partitions increases false positive rates, \nwhile lower number of partitions increases false negative rates\n")
     partition = input("Set number of partitions of the query from 1 to " + str(int(len(query_wavsound.get_data())/3))+": ")
-    samples   = input("Set number of samples of partitions from 1 to " + partition + " (Recommend < 50): ")
+    samples   = input("Set number of samples of partitions from 1 to " + partition + " (Recommend < 70): ")
     
     # Database Structure
     haystacks = []
     
     # Database look up directory
     rootdir    = 'db'
-    
-    
-    
+        
     for subdir, __, files in os.walk(rootdir):
         for file in files:
             # for debug print (subdir+"/"+file)
@@ -43,8 +41,7 @@ def run():
             haystacks.append(haystack(subdir+"/"+file,t_wavsounds[subdir+"/"+file].get_data()))
             
     query_needle_factory = needlefactory(query_wavsound,int(partition),int(samples))
-    
-    
+        
     haystackmap = haystackmapper(haystacks)
     
     needles = query_needle_factory.get_needles()
@@ -58,9 +55,7 @@ def run():
     
     # Process number
     pnum = 0
-    
-    print ("Number of Needles: ",len(needles))
-    
+        
     # Database query time
     start_time = time.time()
     
