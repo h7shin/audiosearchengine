@@ -33,8 +33,6 @@ def run():
     # Database look up directory
     rootdir    = 'db'
     
-    
-    
     for subdir, __, files in os.walk(rootdir):
         for file in files:
             # for debug print (subdir+"/"+file)
