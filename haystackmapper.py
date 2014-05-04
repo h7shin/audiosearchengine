@@ -19,7 +19,7 @@ class haystackmapper:
                 data = haystack.get_data()
                 
                 #get subsequence length
-                len_sub = min(len_needle, (haystack.get_length() - i*len_needle)) 
+                len_sub = min(len_needle, (haystack.get_length() - i)) 
                 
                 subsequence = data[i:i + len_needle]
                 nomatch = 0
