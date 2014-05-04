@@ -16,15 +16,15 @@ If possible, run interfacePython3Plus.py with python3 command.
 
 Example:
 
-		.WAV Search Engine Version 1 (For Python Ver. 3+) <br>
-		Submit .wav file to search against database (Example: button.wav): button.wav <br>
-		button.wav <br> <br>
+    .WAV Search Engine Version 1 (For Python Ver. 3+) <br>
+    Submit .wav file to search against database (Example: button.wav): button.wav <br>
+    button.wav <br> <br>
+    
+    **Higher number of partitions increases false positive rates,  <br>
+    while lower number of partitions increases false negative rates <br> <br>
 
-		**Higher number of partitions increases false positive rates,  <br>
-		while lower number of partitions increases false negative rates <br> <br>
-
-		Set number of partitions of the query from 1 to 2862: 1000 <br>
-		Set number of samples of partitions from 1 to 1000 (Recommend < 50): 50 <br>
+    Set number of partitions of the query from 1 to 2862: 1000 <br>
+    Set number of samples of partitions from 1 to 1000 (Recommend < 50): 50 <br>
     Scanning .wav file  0.00 % <br>
     Scanning .wav file  2.00 % <br>
     Scanning .wav file  4.00 % <br>
