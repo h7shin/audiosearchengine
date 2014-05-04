@@ -35,7 +35,7 @@ class haystackmapper:
                 if nomatch == 0:
                     
                     """ 
-                    Uncomment this section to show alignmnet
+                    Uncomment this section to show comparison
                     print(needle)
                     print(subsequence)
                     print(difference)
@@ -46,7 +46,7 @@ class haystackmapper:
                     break
                 else:
                     pass
-        self.emission = self.emission + emission
+        # self.emission = self.emission + emission
         # if debug print("Number of Emissions:",len(self.emission))
         
         return emission
@@ -54,5 +54,3 @@ class haystackmapper:
         queue.puts(self.mapper(needle))
     def get_emission(self):
         return self.emission
-    def clear_emission (self):
-        self.emission = []

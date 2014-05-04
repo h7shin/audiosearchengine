@@ -73,7 +73,7 @@ if __name__ == '__main__':
    
     print("Long Way")
     start_long_time = time.time()
-    haystackmap.clear_emission()
+    #haystackmap.clear_emission()
     
     i = 10000 # cautionary protection from accidental infinite loop
     
