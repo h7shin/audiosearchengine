@@ -22,7 +22,7 @@ if __name__ == '__main__':
     
     haystacks.append(haystack("7",[1, 2, 3, 4, 5]))
         
-    button_needle_factory = needlefactory(button_wavsound,1000,50)
+    button_needle_factory = needlestorage(button_wavsound,1000,100)
     emissions = []
     
     haystackmap = haystackmapper(haystacks)
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     start_time = time.time()
     
     for needle in needles:
-        p = Process(target=calltomapper, args=(haystackmap,needle,pnum,return_emissions))
+        p = Process(target=calltomapper, args=(haystackmap,needle,pnum,len(needles),return_emissions))
         jobs.append(p)
         p.start()
         pnum += 1
@@ -74,7 +74,9 @@ if __name__ == '__main__':
     print("Long Way")
     start_long_time = time.time()
     haystackmap.clear_emission()
-    i = 10000
+    
+    i = 10000 # cautionary protection from accidental infinite loop
+    
     while i > 0:
         needle = button_needle_factory.pop_unused_needle()
         if (needle == []):
