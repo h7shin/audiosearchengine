@@ -9,7 +9,7 @@ class needlefactory:
     distributed across the wav file) """
     
     needles = []
-    def __init__(self, wavsound: 'wavsound', num_chunks: 'int', limit: 'int'):
+    def __init__(self, wavsound, num_chunks, limit):
         u=0
         x=0
         data = wavsound.get_data()

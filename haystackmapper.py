@@ -9,7 +9,7 @@ class haystackmapper:
     """
     
     emission = []
-    def __init__ (self, haystacks: 'list of haystack'):
+    def __init__ (self, haystacks):
         self.haystacks = haystacks
     def mapper (self, needle):
         emission = []

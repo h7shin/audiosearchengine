@@ -26,7 +26,7 @@ class wavsound:
         self.data = data  
     
     # copy data from other wavsound
-    def copy_from(self, other_wavsound: 'wavsound'):
+    def copy_from(self, other_wavsound):
         self.data = other_wavsound.get_data()    
     
     # Get a small chunk of wavsound

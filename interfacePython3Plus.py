@@ -16,7 +16,7 @@ def run():
     good_file = 0
     
     while (good_file == 0):
-        query     = raw_input("Submit .wav file to search against database (Example: button.wav): ")
+        query     = input("Submit .wav file to search against database (Example: button.wav): ")
         if (os.path.isfile(query)):
             good_file = 1
             
@@ -24,8 +24,8 @@ def run():
     t_wavsounds = {}
     query_wavsound = wavsound(query)    
     print("\n**Higher number of partitions increases false positive rates, \nwhile lower number of partitions increases false negative rates\n")
-    partition = raw_input("Set number of partitions of the query from 1 to " + str(int(len(query_wavsound.get_data())/3))+": ")
-    samples   = raw_input("Set number of samples of partitions from 1 to " + partition + " (Recommend < 50): ")
+    partition = input("Set number of partitions of the query from 1 to " + str(int(len(query_wavsound.get_data())/3))+": ")
+    samples   = input("Set number of samples of partitions from 1 to " + partition + " (Recommend < 50): ")
     
     # Database Structure
     haystacks = []
@@ -59,7 +59,7 @@ def run():
     # Process number
     pnum = 0
     
-    print "Number of Needles: ", len(needles)
+    print ("Number of Needles: ",len(needles))
     
     # Database query time
     start_time = time.time()
@@ -77,18 +77,18 @@ def run():
     # flatten return_emissions into a list
     emissions_list = sum(return_emissions.values(),[])
     
-    print "Search Result:"    
+    print("Search Result:")    
 
     result_dict = haystackreducer(emissions_list)
     
     # Tabulate % match (wav files with 0% match are excluded from the result)
     for key in result_dict:
-        print str(key),": ",(25-len(str(key)))*" ",str("{0:.2f}".format(int(result_dict[key])/len(needles)*100)),"% match"
+        print(str(key),": ",(25-len(str(key)))*" ",str("{0:.2f}".format(int(result_dict[key])/len(needles)*100)),"% match")
     
     # Show search time
     timelapse_parallel = time.time() - start_time   
-    print timelapse_parallel, "seconds"
+    print(timelapse_parallel, "seconds")
     
 if __name__ == '__main__': 
-    print ".WAV Search Engine Version 1 (Only Python Ver 2.X.X.)"
+    print (".WAV Search Engine Version 1 (For Python Ver. 3+) ")
     run()
