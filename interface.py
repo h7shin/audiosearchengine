@@ -40,7 +40,7 @@ def run():
             # for debug print(t_wavsounds[subdir+"/"+file])
             haystacks.append(haystack(subdir+"/"+file,t_wavsounds[subdir+"/"+file].get_data()))
             
-    query_needle_factory = needlefactory(query_wavsound,int(partition),int(samples))
+    query_needle_factory = needlestorage(query_wavsound,int(partition),int(samples))
     
     
     haystackmap = haystackmapper(haystacks)

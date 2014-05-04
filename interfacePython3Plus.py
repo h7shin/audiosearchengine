@@ -25,7 +25,7 @@ def run():
     query_wavsound = wavsound(query)    
     print("\n**Higher number of partitions increases false positive rates, \nwhile lower number of partitions increases false negative rates\n")
     partition = input("Set number of partitions of the query from 1 to " + str(int(len(query_wavsound.get_data())/3))+": ")
-    samples   = input("Set number of samples of partitions from 1 to " + partition + " (Recommend < 70): ")
+    samples   = input("Set number of samples (n) of partitions from 1 to " + partition + " (T = O(n)): ")
     
     # Database Structure
     haystacks = []
@@ -40,7 +40,7 @@ def run():
             # for debug print(t_wavsounds[subdir+"/"+file])
             haystacks.append(haystack(subdir+"/"+file,t_wavsounds[subdir+"/"+file].get_data()))
             
-    query_needle_factory = needlefactory(query_wavsound,int(partition),int(samples))
+    query_needle_factory = needlestorage(query_wavsound,int(partition),int(samples))
         
     haystackmap = haystackmapper(haystacks)
     

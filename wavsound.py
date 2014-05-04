@@ -9,7 +9,7 @@ class wavsound:
         self.data = []# set it as a local variable
         if wav_file == '':
              return
-        print(wav_file)
+        #print(wav_file)
         waveFile = wave.open(wav_file, 'r')
         length = waveFile.getnframes()
         for i in range(0,length):

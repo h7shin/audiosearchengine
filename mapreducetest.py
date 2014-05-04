@@ -27,7 +27,7 @@ if __name__ == '__main__':
     print(haystackreducer(sum(emissions,[])))
     emissions= []
     
-    print("USING MAP PROCESS 1 ")
+    print("USING MAP PROCESS")
     p = Process(target=simplefunction, args=(1,2))
     p.start()
     p = Process(target=simplefunction, args=(1,3))
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     p.start()
     p.join()
     
-    print("USING MAP PROCESS and Manager")
+    print("USING MAP PROCESS WITH MANAGER")
     needles = [2, 3]
     manager = Manager()
     return_emissions = manager.dict()    
@@ -52,17 +52,9 @@ if __name__ == '__main__':
         proc.join()   
     
     emissions_list = sum(return_emissions.values(),[])
-    print(haystackreducer(emissions_list ))
+    print(haystackreducer(emissions_list )) 
     
-    
-    print("USING MAP PROCESS 3")
-    for needle in [[2],[3]]:
-        Process(target=haystackmap.mapper, args=(needle,)).start()
-    print(haystackmap.get_emission())
-    haystackmap.clear_emission()
-    
-    
-    print("Long Way")  
+    print("Long Way (Serial Method)")  
     
     needles = [2, 3]
     haystackmap = haystackmapper(haystacks)
