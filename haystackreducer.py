@@ -1,6 +1,6 @@
 from haystack import haystack
 
-def haystackreducer(concatenated_emissions):
+def haystackreducer(concatenated_emissions, key_names):
     """
         haystackreducer is a class responsible for reducing emissions
         from multiple map processes. It tallies the number of matches
@@ -8,11 +8,7 @@ def haystackreducer(concatenated_emissions):
     """  
     
     join = {}
-    for key_value_pair in concatenated_emissions:
-        if key_value_pair[0] in join:
-            join[key_value_pair[0]] = join[key_value_pair[0]] + key_value_pair[1]
-        else:
-            join[key_value_pair[0]] = key_value_pair[1]
-        #print(join)
+    for key in key_names:
+        join[key] = len([1 for x in concatenated_emissions if x[0] == key]) 
     return join
     

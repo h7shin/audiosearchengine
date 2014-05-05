@@ -25,26 +25,38 @@ def run():
     query_wavsound = wavsound(query)    
     print("\n**Higher number of partitions increases false positive rates, \nwhile lower number of partitions increases false negative rates\n")
     partition = input("Set number of partitions of the query from 1 to " + str(int(len(query_wavsound.get_data())/3))+": ")
-    samples   = input("Set number of samples (n) of partitions from 1 to " + partition + " (T = O(n)): ")
-    
-    # Database Structure
-    haystacks = []
+    samples   = input("Set number of samples (n) of partitions from 1 to " + partition + ": ")
     
     # Database look up directory
     rootdir    = 'db'
-        
+    
+    # Database Structure
+    haystackss = []   # split database into list of smaller database
+    key_names = []
+
+    # Database Spliting Parameters (1 to number of database entries)
+    db_size_per_split = 100
+    max_split = int(input("Set maximum number of split databases :"))
+    
+    for i in range(max_split):
+        haystackss.append([])    
+    
+    # Read Files
+    counter = 0
     for subdir, __, files in os.walk(rootdir):
         for file in files:
-            # for debug print (subdir+"/"+file)
+            key_names.append(subdir+"/"+file)
+            split_db_key = min(max_split, int(counter / db_size_per_split))
             t_wavsounds[subdir+"/"+file] = wavsound(subdir+"/"+file)
-            # for debug print(t_wavsounds[subdir+"/"+file])
-            haystacks.append(haystack(subdir+"/"+file,t_wavsounds[subdir+"/"+file].get_data()))
+            haystackss[split_db_key].append(haystack(subdir+"/"+file,t_wavsounds[subdir+"/"+file].get_data()))
+            counter += 1
             
     query_needle_factory = needlestorage(query_wavsound,int(partition),int(samples))
-        
-    haystackmap = haystackmapper(haystacks)
     
+    # Get segments of the query data as needles
     needles = query_needle_factory.get_needles()
+    
+    # Manager to keep track of all map results
     manager = Manager()
     
     # Map processes emit key-value pairs to emissions
@@ -60,11 +72,14 @@ def run():
     start_time = time.time()
     
     #Distribute processes using multiprocessor
+    len_needles = len(needles)
     for needle in needles:
-        p = Process(target=calltomapper, args=(haystackmap,needle,pnum,len(needles),return_emissions))
-        jobs.append(p)
-        p.start()
-        pnum += 1
+        for haystacks in haystackss:
+            if haystacks != []:
+                p = Process(target=calltomapper, args=(haystacks,needle,pnum,len_needles*len(haystackss),return_emissions))
+                jobs.append(p)
+                p.start()
+                pnum += 1
     
     for proc in jobs:
         proc.join() 
@@ -74,7 +89,7 @@ def run():
     
     print("Search Result:")    
 
-    result_dict = haystackreducer(emissions_list)
+    result_dict = haystackreducer(emissions_list, key_names)
     
     # Tabulate % match (wav files with 0% match are excluded from the result)
     for key in result_dict:

@@ -1,4 +1,4 @@
-from haystackmapper import haystackmapper 
+from haystackmap import mapper
 from haystackreducer import haystackreducer
 from haystack import haystack
 from needlestorage import needlestorage
@@ -6,51 +6,72 @@ from wavsound import wavsound
 from multiprocessing import Pool, Process, Manager
 from calltomapper import calltomapper
 import time
+import profile
+import re
 
 """ dbtest is a simulation module to measure time complexity of 
 database search applied to a virtual database"""
 
-if __name__ == '__main__': 
+def test(): 
     button_wavsound = wavsound('button.wav')
     
-    haystacks = []   # Database Structure
-
+    haystackss = []   # split database into list of smaller database
+    keynames = []
     db_size = 300     # Set Database Size
+    num_split_db = 2  # Set number of split databases
+    size_split_db = int(db_size/num_split_db)
     
+    for i in range(num_split_db):
+        haystackss.append([])
+    
+    counter = 0
     for i in range(db_size):
-        haystacks.append(haystack(i,button_wavsound.get_data()))
+        split_db_key = int(counter / size_split_db)
+        keynames.append(i)
+        haystackss[split_db_key].append(haystack(i,button_wavsound.get_data()))
+        counter+=1
     
-    haystacks.append(haystack("7",[1, 2, 3, 4, 5]))
+    
+    #haystacks.append(haystack("7",[1, 2, 3, 4, 5]))
         
     button_needle_factory = needlestorage(button_wavsound,1000,50)
     emissions = []
     
-    haystackmap = haystackmapper(haystacks)
-    
+
     print("USING MAP PROCESS and Manager")
+    
     needles = button_needle_factory.get_needles()
+    print(needles[0])
+    
     manager = Manager()
     return_emissions = manager.dict()    
     jobs = []
     pnum = 0
     
-    print ("Number of Needles: ",len(needles))
+    # number of needles not size of each needle
+    len_needles = len(needles)
+    print ("Number of Needles: ",len_needles) 
     start_time = time.time()
     
+
+    
     for needle in needles:
-        p = Process(target=calltomapper, args=(haystackmap,needle,pnum,len(needles),return_emissions))
-        jobs.append(p)
-        p.start()
-        pnum += 1
+        for haystacks in haystackss:   
+            p = Process(target=calltomapper, args=(haystacks,needle,pnum,len_needles*num_split_db,return_emissions))
+            jobs.append(p)
+            p.start()
+            pnum += 1    
+    print(time.time() - start_time)
     
     for proc in jobs:
-        proc.join() 
-    
+        proc.join() # wait for each process to end completely
+        
+    print(time.time() - start_time)
     emissions_list = sum(return_emissions.values(),[])
     print("Reduce Result:")    
-    print(haystackreducer(emissions_list ))        
+    print(haystackreducer(emissions_list,keynames))        
     print("Done")
-    timelapse_parallel = time.time() - start_time
+    print(time.time() - start_time)
     
     
     """
@@ -70,7 +91,7 @@ if __name__ == '__main__':
     """
     
     """ The algorithm below is a serial method, no optimization """
-   
+    """
     print("Long Way")
     start_long_time = time.time()
     #haystackmap.clear_emission()
@@ -81,13 +102,17 @@ if __name__ == '__main__':
         needle = button_needle_factory.pop_unused_needle()
         if (needle == []):
             break
-        emissions += haystackmap.mapper(needle)
+        emissions += mapper(haystacks,needle)
         i -= 1
         print("Total So Far: ",len(emissions))
     
-    print("Final:",haystackreducer(emissions))
+    print("Final:",haystackreducer(emissions, keynames))
     timelapse_serial = time.time() - start_long_time
     print (db_size + 1, timelapse_parallel, timelapse_serial)
     
     with open('output.txt', 'a') as outputfile:
         outputfile.write(str(db_size + 1) +' '+str(timelapse_parallel) +' '+str(timelapse_serial) + '\n')    
+    """
+if __name__ == '__main__': 
+    test()
+    profile.run('re.compile("mapper")')

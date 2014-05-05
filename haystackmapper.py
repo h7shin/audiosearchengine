@@ -1,5 +1,6 @@
 from haystack import haystack
 
+
 class haystackmapper:
     
     """
@@ -12,29 +13,35 @@ class haystackmapper:
     def __init__ (self, haystacks):
         self.haystacks = haystacks
     def mapper (self, needle):
-        emission = []
         len_needle = len(needle)
+        emission = []
         for haystack in self.haystacks:
-            for i in range(haystack.get_length()):
-                data = haystack.get_data()
-                
+            len_haystack = haystack.get_length()
+            data = haystack.get_data()
+            for i in range(len_haystack):
+                 
                 #get subsequence length
-                len_sub = min(len_needle, (haystack.get_length() - i)) 
+                len_sub = min(len_needle, (len_haystack - i)) 
                 
                 subsequence = data[i:i + len_needle]
                 nomatch = 0
+                """ 
+                Uncomment this for debugging:                 
                 #difference = []
+                """
+                
                 if len_sub <= 1:
                     nomatch = 1
                     break
-                for i in range(min(len_sub,len_needle)):
+                for i in range(len_sub): # len_sub <= len_needle
+                    """ 
+                    Uncomment this for debugging: 
                     if abs(needle[i]) > 100 :
-                        pass
-                        # Uncomment this: difference.append(abs(subsequence[i] - needle[i])/needle[i] )
+                        difference.append(abs(subsequence[i] - needle[i])/needle[i] )
                     else:
-                        pass
-                        # Uncomment this: difference.append(0)
-                    if abs(needle[i]) > 100 and abs((subsequence[i] - needle[i])/(needle[i])) > 0.05: 
+                        difference.append(0)
+                    """
+                    if abs(needle[i]) > 100 and abs(subsequence[i] - needle[i]) > abs(0.05*needle[i]): 
                         # allow slight variation
                         nomatch = 1
                         break
@@ -42,7 +49,7 @@ class haystackmapper:
                 if nomatch == 0:
                     
                     """ 
-                    Uncomment this section to show comparison
+                    Uncomment this section for deubgging to show comparison
                     print(needle)
                     print(subsequence)
                     print(difference)
@@ -53,11 +60,6 @@ class haystackmapper:
                     break
                 else:
                     pass
-        # self.emission = self.emission + emission
-        # if debug print("Number of Emissions:",len(self.emission))
         
         return emission
-    def mapper_queue (self, needle, queue):
-        queue.puts(self.mapper(needle))
-    def get_emission(self):
-        return self.emission
+
