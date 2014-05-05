@@ -49,3 +49,5 @@ Example:
 	db/button.wav :               100.0 % match
 	db/buttonresampled.wav :      100.0 % match
 	4.69403600692749 seconds
+
+The above program is run under SONY VAIO VPCE Model Ci5 4GB RAM 2.27GHz Dual Core Procesor
