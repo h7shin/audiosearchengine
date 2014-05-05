@@ -93,7 +93,8 @@ def run():
     
     # Tabulate % match (wav files with 0% match are excluded from the result)
     for key in result_dict:
-        print(str(key),": ",(25-len(str(key)))*" ",str("{0:.2f}".format(int(result_dict[key])/len(needles)*100)),"% match")
+        if result_dict[key] > 0:
+            print(str(key),": ",(25-len(str(key)))*" ",str((int(result_dict[key])/len(needles)*100)),"% match")
     
     # Show search time
     timelapse_parallel = time.time() - start_time   
