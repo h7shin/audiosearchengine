@@ -7,11 +7,11 @@ class needlestorage:
     number of samples to be analyzed (limit). The needles/samples are picked
     deterministically so that the data sampled are evenly 
     distributed across the wav file) """
-    
     needles = []
     def __init__(self, wavsound, num_chunks, limit):
         u=0
         x=0
+        self.needles = []
         data = wavsound.get_data()
         skips_per_neeedle = max(1,int(len(data)/limit))
         for i in range (len(data)):
@@ -28,3 +28,5 @@ class needlestorage:
         return self.needles.pop(0)
     def get_needles(self):
         return self.needles
+    def clear_needles(self):
+        self.needles = []

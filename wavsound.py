@@ -11,6 +11,7 @@ class wavsound:
              return
         #print(wav_file)
         waveFile = wave.open(wav_file, 'r')
+        
         length = waveFile.getnframes()
         for i in range(0,length):
             waveData = waveFile.readframes(1)

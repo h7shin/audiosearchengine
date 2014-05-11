@@ -1,0 +1,30 @@
+
+
+Time Complexity Analysis
+	Serial Method	
+	Overall						O(l*n*k)
+	for query in list_of_queries:			O(l*n*k) l is the size of list_of_queries
+		for haystack in list_of_haystack	O(n*k) 	 n is the DB size (haystacks)
+			for i in range(len(haystack)):	O(k*1) 	 (worst case k is the size of haystack)
+				Append if match		O(1)
+		Extend Emission List 			O(n*k)   k is the size of haystack
+	Reduce Step					O(l*n)
+	
+
+	Multiprocess Method
+
+	Overall						O(n*max(k,l))
+	for query in list_of_queries:			O   (theoretical) multiprocess step
+							(if n is sufficiently small,
+							and l is sufficiently large, O ~ O(l*n*k)
+							due to overhead cost of setting up processes
+							(if n is sufficiently large,
+							and l is relatively small, O ~ O(n*k)
+							the overhead cost is insignificant compared
+							to the runtime of each process unit
+		for haystack in list_of_haystack	O(n*k) 	 n is the DB size (haystacks)
+			for i in range(len(haystack)):	O(k*1) 	 (worst case k is the size of haystack)
+				Append if match		O(1)
+		Extend Emission List 			Unknown  uses .join()
+	Reduce Step					O(l*n)
+	

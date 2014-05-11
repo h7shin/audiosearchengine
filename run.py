@@ -8,27 +8,17 @@ from calltomapper import calltomapper
 import time
 import os
 
-def run():
+def run(query, partition, samples, rootdir, max_split):
     
     """ run runs the database search taking three user inputs, the query wav file,
     number of partitions, and number of partition samples"""
     
-    good_file = 0
+    # output of the function
+    output = ""
     
-    while (good_file == 0):
-        query     = input("Submit .wav file to search against database (Example: button.wav): ")
-        if (os.path.isfile(query)):
-            good_file = 1
-            
     #Instantiate Wavsound objects from the wav files
     t_wavsounds = {}
     query_wavsound = wavsound(query)    
-    print("\n**Higher number of partitions increases false positive rates, \nwhile lower number of partitions increases false negative rates\n")
-    partition = input("Set number of partitions of the query from 1 to " + str(int(len(query_wavsound.get_data())/3))+": ")
-    samples   = input("Set number of samples (n) of partitions from 1 to " + partition + ": ")
-    
-    # Database look up directory
-    rootdir    = 'db'
     
     # Database Structure
     haystackss = []   # split database into list of smaller database
@@ -36,7 +26,6 @@ def run():
 
     # Database Spliting Parameters (1 to number of database entries)
     db_size_per_split = 100
-    max_split = int(input("Set maximum number of split databases :"))
     
     for i in range(max_split):
         haystackss.append([])    
@@ -55,6 +44,8 @@ def run():
     
     # Get segments of the query data as needles
     needles = query_needle_factory.get_needles()
+    print("...", len(needles), "needles")
+    query_needle_factory.clear_needles()
     
     # Manager to keep track of all map results
     manager = Manager()
@@ -76,6 +67,7 @@ def run():
     for needle in needles:
         for haystacks in haystackss:
             if haystacks != []:
+                #print(len_needles)
                 p = Process(target=calltomapper, args=(haystacks,needle,pnum,len_needles*len(haystackss),return_emissions))
                 jobs.append(p)
                 p.start()
@@ -87,19 +79,18 @@ def run():
     # flatten return_emissions into a list
     emissions_list = sum(return_emissions.values(),[])
     
-    print("Search Result:")    
+    output += "Search Result: \n"  
 
     result_dict = haystackreducer(emissions_list, key_names)
     
     # Tabulate % match (wav files with 0% match are excluded from the result)
-    for key in result_dict:
+    for key in sorted(result_dict, key=result_dict.get, reverse=True):
         if result_dict[key] > 0:
-            print(str(key),": ",(25-len(str(key)))*" ",str((int(result_dict[key])/len(needles)*100)),"% match")
+            output += str(key) + " : " + (40-len(str(key)))*" " + str((int(result_dict[key])/len(needles)*100)) + "% match" + "\n"
     
     # Show search time
     timelapse_parallel = time.time() - start_time   
-    print(timelapse_parallel, "seconds")
+    output = output + str(timelapse_parallel) + "seconds"
+    needles = []
+    return output
     
-if __name__ == '__main__': 
-    print (".WAV Search Engine Version 1 (For Python Ver. 3+) ")
-    run()
