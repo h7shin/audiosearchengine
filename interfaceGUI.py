@@ -7,8 +7,8 @@ from tkinter import ttk
 class application:
     
     def __init__(self):
-        self.samples = 5
-        self.samplelength = 50
+        self.samples = 12
+        self.samplelength = 80
         self.max_split = 2
         self.root = tk.Tk()
         self.root.wm_title("Audio Search Engine")
@@ -67,7 +67,7 @@ class application:
     
     # refresh parameter labels
     def refresh_parameters (self):
-        newtext="Number of Audio Samples to Compare: " + str(self.samples) + " repository Maximum Split Paramter: " + str(self.max_split) + " Word Length: " + str(self.samplelength )
+        newtext="Number of Audio Samples to Compare: " + str(self.samples) + " Repository Maximum Split Paramter: " + str(self.max_split) + " Word Length: " + str(self.samplelength )
         self.label_result.config(text=newtext)       
     
     # decrease number of samples (words or needles)   
@@ -112,7 +112,7 @@ class application:
     def show_result (self):
         self.group_result = tk.LabelFrame(self.root, text="", padx=5, pady=5)
         self.group_result.pack(padx=10, pady=15, side = 'left')
-        self.label_result = tk.Label(self.group_result,  text="Number of Audio Samples to Compare: " + str(self.samples) + " repository Maximum Split Paramter: " + str(self.max_split) + " Word Length: " + str(self.samplelength ))
+        self.label_result = tk.Label(self.group_result,  text="Number of Audio Samples to Compare: " + str(self.samples) + " Repository Maximum Split Paramter: " + str(self.max_split) + " Word Length: " + str(self.samplelength ))
         self.label_result.pack()        
         self.text_result = tk.Text(self.group_result, height="20")
         self.text_result.configure(background='black', foreground='cyan')

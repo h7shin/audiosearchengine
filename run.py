@@ -41,7 +41,7 @@ def run(query, sample_length, samples, rootdir, max_split):
             key_names.append(subdir+"/"+file)
             split_db_key = min(max_split, int(counter / db_size_per_split))
             t_wavsounds[subdir+"/"+file] = wavsound(subdir+"/"+file)
-            haystackss[split_db_key].append(haystack(subdir+"/"+file,t_wavsounds[subdir+"/"+file].get_data()[::50]))
+            haystackss[split_db_key].append(haystack(subdir+"/"+file,t_wavsounds[subdir+"/"+file].get_data()[::16]))
             counter += 1
             
     query_needle_factory = needlestorage(query_wavsound,sample_length,int(samples))
@@ -90,7 +90,7 @@ def run(query, sample_length, samples, rootdir, max_split):
     
     for key in key_names:
         key_list = [1 for x in return_emissions if x[0] == key]
-        #print (key, key_list)
+        print (key, key_list)
         q = Process(target=calltoreducer, args=(key_list, key, result_dict))
         jobs.append(q)
         q.start()
@@ -99,7 +99,7 @@ def run(query, sample_length, samples, rootdir, max_split):
         proc.join()         
     
     result_lst = []
-    
+    print(len(needles), "is length of needles")
     if len(result_dict.items()) != 0:
         for key, value in sorted(result_dict.items(), key=lambda pair: pair[1], reverse=True):
             if value > 0:

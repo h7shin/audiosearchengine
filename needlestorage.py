@@ -13,11 +13,11 @@ class needlestorage:
         u=0
         x=0
         self.needles = []
-        data = wavsound.get_data()[::50] # skip every 50
-        
+        data = wavsound.get_data()[::16] # skip every 16
+        print(int(len(data)/limit)-sample_length, "is skip value")
         # determine the gap between the starting positions of two consecutive
         # needles (i.e. opposite of degree of overlap)
-        skips_per_neeedle = max(1,len(data)/limit-sample_length)
+        skips_per_neeedle = max(1,int(len(data)/limit)-sample_length)
         for i in range (len(data)):
             if u >= limit:
                 break
