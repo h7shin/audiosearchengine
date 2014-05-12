@@ -20,7 +20,7 @@ Do you have any screenshots?
 What does the program do?
 
 	Suppose a case where a student has a recorded section of some audio file, or
-	a small preview of a music file, but he/she cannot remember the song name or the 
+	a snippet of a music file, but he/she cannot remember the song name or the 
 	ring-tone name. He/she can search for similar audio files in the database 
 	with the best waveform alignments. 
 	
