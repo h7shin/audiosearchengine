@@ -11,14 +11,14 @@ Requirements
 		using Audacity Opensource Software 
 		For UNIX users, you may also use SoX to add .wav header to raw bit stream data
 
-Screenshots?
+Do you have any screenshots?
 	
 	screenshot.png is available in img directory
 
-What is it?
+What does your program do?
 
-	Suppose you have a recorded section of some audio file, but
-	you cannot remember the song name or the ring-tone name. You can search
+	Suppose a student has a recorded section of some audio file, but
+	he/she cannot remember the song name or the ring-tone name. He/she can search
 	for similar audio files in the database with the best waveform alignments. 
 	
 	You can adjust the level of stringency to balance the speed and quality of
