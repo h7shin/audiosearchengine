@@ -5,30 +5,36 @@ from needlestorage import needlestorage
 from wavsound import wavsound
 from multiprocessing import Pool, Process, Manager
 from calltomapper import calltomapper
+from calltoreducer import calltoreducer
+from operator import itemgetter
 import time
 import os
 
 def run(query, sample_length, samples, rootdir, max_split):
     
-    """ run runs the database search taking three user inputs, the query wav file,
+    """ run runs the repository search taking three user inputs, the query wav file,
    sample_length, and number of partition samples"""
     
     
     #Instantiate Wavsound objects from the wav files
+    
     t_wavsounds = {}
     query_wavsound = wavsound(query)    
     
-    # Database Structure
-    haystackss = []   # split database into list of smaller database
+    # repository Structure
+    
+    haystackss = []   # split repository into list of smaller repository
     key_names = []
 
-    # Database Spliting Parameters (1 to number of database entries)
+    # repository Spliting Parameters (1 to number of repository entries)
+    
     db_size_per_split = 100
     
     for i in range(max_split):
         haystackss.append([])    
     
-    # Read Files
+    # Read Files in the DB
+    
     counter = 0
     for subdir, __, files in os.walk(rootdir):
         for file in files:
@@ -42,14 +48,16 @@ def run(query, sample_length, samples, rootdir, max_split):
     
     # Get segments of the query data as needles
     needles = query_needle_factory.get_needles()
-    print("...", len(needles), "needles")
+    #print("...", len(needles), "needles")
     query_needle_factory.clear_needles()
+    
+    # MAP --------------------------------------------------
     
     # Manager to keep track of all map results
     manager = Manager()
     
     # Map processes emit key-value pairs to emissions
-    return_emissions = manager.dict()    
+    return_emissions = manager.list()    
     
     # Job is a list of processes
     jobs = []
@@ -70,16 +78,34 @@ def run(query, sample_length, samples, rootdir, max_split):
     
     for proc in jobs:
         proc.join() 
+        
+    # SHUFFLE ------------------------------------------------
     
-    # flatten return_emissions into a list
-    emissions_list = sum(return_emissions.values(),[])
-    result_dict = haystackreducer(emissions_list, key_names)
+    # Job is a list of processes
+    jobs = []     
+    
+    # Manager to keep track of all map results
+    manager_2 = Manager()    
+    result_dict = manager_2.dict()
+        
+    for key in key_names:
+        key_list = [1 for x in return_emissions if x[0] == key]
+        #print (key, key_list)
+        q = Process(target=calltoreducer, args=(key_list, key, result_dict))
+        jobs.append(q)
+        q.start()
+        
+    for proc in jobs:
+        proc.join()         
+            
+    # REDUCE ---------------------------------------------------
     
     result_lst = []
     
-    for key in sorted(result_dict, key=result_dict.get, reverse=True):
-        if result_dict[key] > 0:
-            result_lst.append([str(key), str((int(result_dict[key])/len(needles)*100))])
+    if len(result_dict.items()) != 0:
+        for key, value in sorted(result_dict.items(), key=lambda pair: pair[1], reverse=True):
+            if value > 0:
+                result_lst.append([str(key), str((int(value)/len(needles)*100))])
             
     needles = []
     return result_lst

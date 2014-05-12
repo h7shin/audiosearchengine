@@ -7,4 +7,4 @@ def calltomapper(haystacks, needle, processnumber, totalprocesses, return_emissi
     
     print("Finished with process ", processnumber, " word(sample) size of ",len(needle))
   
-    return_emissions[processnumber] = mapper(haystacks, needle)
+    return_emissions += mapper(haystacks, needle)
