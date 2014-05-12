@@ -12,8 +12,8 @@ Requirements
 		For UNIX users, you may also use SoX to add .wav header to raw bit stream data
 
 Do you have any screenshots?
-
-	![ScreenShot](https://github.com/hyunwookshin/audiosearchengine/tree/master/img)
+	
+	[link](https://github.com/hyunwookshin/audiosearchengine/tree/master/img/screenshot.png)
 	screenshot.png is available in img directory
 
 What does your program do?
