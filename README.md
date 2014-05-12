@@ -27,7 +27,7 @@ What does the program do?
 	You can adjust the level of stringency to balance the speed and quality of
 	the search.
 	
-	The algorithm implements a Map-Reduce pattern with multiple map processes
+	The algorithm implements a Map-Reduce pattern with multiple map/reduce processes
 	that run in parallel.
 
 Python Libraries Used
