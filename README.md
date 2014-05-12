@@ -4,6 +4,7 @@ audiosearchengine
 Requirements
 
 Python Ver. 3.X.X
+python-tk package for GUI application
 X11 (for Cygwin) or XQuartz installed (for Mac) when using GUI application
 WAV audio file (.wav) format: signed mono 16 bit PCM
 	Use .wav converters online, and if neccessary re-sample the audio files
