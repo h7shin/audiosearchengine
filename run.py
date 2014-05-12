@@ -41,7 +41,7 @@ def run(query, sample_length, samples, rootdir, max_split):
             key_names.append(subdir+"/"+file)
             split_db_key = min(max_split, int(counter / db_size_per_split))
             t_wavsounds[subdir+"/"+file] = wavsound(subdir+"/"+file)
-            haystackss[split_db_key].append(haystack(subdir+"/"+file,t_wavsounds[subdir+"/"+file].get_data()[::16]))
+            haystackss[split_db_key].append(haystack(subdir+"/"+file,t_wavsounds[subdir+"/"+file].get_data()[::50]))
             counter += 1
             
     query_needle_factory = needlestorage(query_wavsound,sample_length,int(samples))
@@ -79,7 +79,7 @@ def run(query, sample_length, samples, rootdir, max_split):
     for proc in jobs:
         proc.join() 
         
-    # SHUFFLE ------------------------------------------------
+    # SHUFFLE/REDUCE ------------------------------------------
     
     # Job is a list of processes
     jobs = []     
@@ -87,7 +87,7 @@ def run(query, sample_length, samples, rootdir, max_split):
     # Manager to keep track of all map results
     manager_2 = Manager()    
     result_dict = manager_2.dict()
-        
+    
     for key in key_names:
         key_list = [1 for x in return_emissions if x[0] == key]
         #print (key, key_list)
@@ -97,8 +97,6 @@ def run(query, sample_length, samples, rootdir, max_split):
         
     for proc in jobs:
         proc.join()         
-            
-    # REDUCE ---------------------------------------------------
     
     result_lst = []
     

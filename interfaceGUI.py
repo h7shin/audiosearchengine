@@ -8,7 +8,7 @@ class application:
     
     def __init__(self):
         self.samples = 5
-        self.samplelength = 100
+        self.samplelength = 50
         self.max_split = 2
         self.root = tk.Tk()
         self.root.wm_title("Audio Search Engine")
