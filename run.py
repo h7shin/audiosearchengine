@@ -13,8 +13,6 @@ def run(query, partition, samples, rootdir, max_split):
     """ run runs the database search taking three user inputs, the query wav file,
     number of partitions, and number of partition samples"""
     
-    # output of the function
-    output = ""
     
     #Instantiate Wavsound objects from the wav files
     t_wavsounds = {}
@@ -37,7 +35,7 @@ def run(query, partition, samples, rootdir, max_split):
             key_names.append(subdir+"/"+file)
             split_db_key = min(max_split, int(counter / db_size_per_split))
             t_wavsounds[subdir+"/"+file] = wavsound(subdir+"/"+file)
-            haystackss[split_db_key].append(haystack(subdir+"/"+file,t_wavsounds[subdir+"/"+file].get_data()))
+            haystackss[split_db_key].append(haystack(subdir+"/"+file,t_wavsounds[subdir+"/"+file].get_data()[::16]))
             counter += 1
             
     query_needle_factory = needlestorage(query_wavsound,int(partition),int(samples))
@@ -58,10 +56,7 @@ def run(query, partition, samples, rootdir, max_split):
     
     # Process number
     pnum = 0
-        
-    # Database query time
-    start_time = time.time()
-    
+            
     #Distribute processes using multiprocessor
     len_needles = len(needles)
     for needle in needles:
@@ -78,19 +73,13 @@ def run(query, partition, samples, rootdir, max_split):
     
     # flatten return_emissions into a list
     emissions_list = sum(return_emissions.values(),[])
-    
-    output += "Search Result: \n"  
-
     result_dict = haystackreducer(emissions_list, key_names)
     
-    # Tabulate % match (wav files with 0% match are excluded from the result)
+    result_lst = []
+    
     for key in sorted(result_dict, key=result_dict.get, reverse=True):
         if result_dict[key] > 0:
-            output += str(key) + " : " + (40-len(str(key)))*" " + str((int(result_dict[key])/len(needles)*100)) + "% match" + "\n"
-    
-    # Show search time
-    timelapse_parallel = time.time() - start_time   
-    output = output + str(timelapse_parallel) + "seconds"
+            result_lst.append([str(key), str((int(result_dict[key])/len(needles)*100))])
+            
     needles = []
-    return output
-    
+    return result_lst

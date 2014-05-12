@@ -12,13 +12,28 @@ if __name__ == '__main__':
         query_wavsound = wavsound(query)    
                 
     print("\n**Higher number of partitions increases false positive rates, \nwhile lower number of partitions increases false negative rates\n")
-    partition = input("Set number of partitions of the query from 1 to " + str(int(len(query_wavsound.get_data())/3))+": ")
+    samplelength = input("Set word size (sample length) (5 ~ 100) : ");
+    partition = str(int(len(query_wavsound.get_data())/float(samplelength)))
     samples   = input("Set number of samples (n) of partitions from 1 to " + partition + ": ")
     
     # Database look up directory
     
-    rootdir    = input("Enter database directory to search (if unsure type 'db') : ")
+    dbdir    = input("Enter database directory to search (example: 'db') : ")
     max_split = int(input("Set maximum allowable number of split databases : "))
     
-    output = run(query, partition, samples, rootdir, max_split)
+    # Database query time
+    start_time = time.time()        
+            
+    result_lst = run(query, str(partition), samples, dbdir, max_split)
+            
+    # output
+    output = "Search Result: \n" 
+            
+    # Tabulate % match (wav files with 0% match are excluded from the result)
+    for pair in result_lst:
+        output += pair[0] + " : " + (40-len(pair[0]))*" " + pair[1] + "% match" + "\n"
+                        
+        # Show search time
+        timelapse_parallel = time.time() - start_time   
+        output = output + str(timelapse_parallel) + "seconds"
     print(output)

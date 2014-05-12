@@ -7,8 +7,8 @@ from tkinter import ttk
 class application:
     
     def __init__(self):
-        self.samples = 10
-        self.samplelength = 5
+        self.samples = 5
+        self.samplelength = 100
         self.max_split = 2
         self.root = tk.Tk()
         self.root.wm_title("Audio Search Engine")
@@ -29,7 +29,7 @@ class application:
     
     # show audio wavform canvas
     def show_canvas (self):
-        self.group_canvas = tk.LabelFrame(self.group_enclosure, text="Waveform", padx=5, pady=5)
+        self.group_canvas = tk.LabelFrame(self.group_enclosure, text="Top(Query) Bottom(Best Match)", padx=5, pady=5)
         self.group_canvas.pack(side='top')
         
         self.canvas_query = tk.Canvas(self.group_canvas, width = 200, height = 100, bg = 'black')
@@ -44,7 +44,14 @@ class application:
                 
         #self.photo = tk.PhotoImage(file = 'img/search.png',  width = 70, height = 70 )
         #self.canvas.create_image(5, 5, image=self.photo, anchor="nw")  
+    
+    def clear_canvas(self):
+        self.canvas_query.create_rectangle(0, 0, 200, 100, fill="black")
+        self.canvas_result.create_rectangle(0, 0, 200, 100, fill="black")
+        self.canvas_query.create_line(0, 50, 199.9, 50, fill="red", dash=(4, 4))
+        self.canvas_result.create_line(0, 50, 199.9, 50, fill="red", dash=(4, 4))
         
+    # draw_wavform draws waveform of wav data to a target canvas
     def draw_wavform (self, wavdata, color, target):
         unit_x=200/len(wavdata)
         unit_y=20/max(wavdata)
@@ -58,28 +65,34 @@ class application:
             elif target == "result":
                 self.canvas_result.create_line(x_1, y_1, x_2, y_2, fill=color, width=0.5)
     
+    # refresh parameter labels
     def refresh_parameters (self):
         newtext="Number of Audio Samples to Compare: " + str(self.samples) + " Database Maximum Split Paramter: " + str(self.max_split) + " Word Length: " + str(self.samplelength )
         self.label_result.config(text=newtext)       
-
+    
+    # decrease number of samples (words or needles)   
     def sample_up (self):
         self.samples += 1
         self.refresh_parameters()    
-                        
+        
+    # decrease number of samples (words or needles)                    
     def sample_down (self):
         if self.samples > 0:
             self.samples -= 1
             self.refresh_parameters()        
-        
+            
+    # increase samplelength (word size)    
     def word_up (self):
         self.samplelength += 5
         self.refresh_parameters()
-         
+
+    # decrease samplelength (word size)
     def word_down (self):
         if self.samplelength > 5:
             self.samplelength -= 5  
             self.refresh_parameters()
-        
+    
+    # show_menu shows the menu at the top
     def show_menu (self): 
         self.menu = tk.Menu(self.root)
         self.menu.add_command(label="Search", command=self.on_button_click)
@@ -90,10 +103,12 @@ class application:
         self.menu.add_command(label="Quit", command=self.quit)
         self.root.config (menu=self.menu)
         
+    # add style (optional)
     def add_config (self):
         self.style = ttk.Style()
         #self.style.configure(... enter here ...)        
 
+    # show textbox that holds the result of the search
     def show_result (self):
         self.group_result = tk.LabelFrame(self.root, text="", padx=5, pady=5)
         self.group_result.pack(padx=10, pady=15, side = 'left')
@@ -102,7 +117,8 @@ class application:
         self.text_result = tk.Text(self.group_result, height="20")
         self.text_result.configure(background='black', foreground='cyan')
         self.text_result.pack()
-        
+    
+    # show file entry input box
     def show_file_entry(self):
         # GROUP ENTRY
         
@@ -121,22 +137,39 @@ class application:
         self.entry_db.insert(0, "db_voice")
         self.entry_db.pack()        
         
+    # show search button below the file entry
     def show_buttons (self):
         root = self.root
-        
         tk.Button(self.group_entry, padx=15, text="Search", command=self.on_button_click).pack()
         
-        
+    # on click event for the button
     def on_button_click(self):
-        self.filename = self.entry_file.get()
         
+        self.filename = self.entry_file.get()
+        self.clear_canvas()
         if (os.path.isfile(self.filename)):  
             query_wavsound = wavsound(self.filename)            
             self.dbroot = self.entry_db.get()
             samples = self.samples
             partition = int(len(query_wavsound.get_data())/self.samplelength)
             max_split = self.max_split
-            output = run(self.filename, str(partition), samples, self.dbroot, max_split)
+            
+            # Database query time
+            start_time = time.time()        
+            
+            result_lst = run(self.filename, str(partition), samples, self.dbroot, max_split)
+            
+            # output
+            output = "Search Result: \n" 
+            
+            # Tabulate % match (wav files with 0% match are excluded from the result)
+            for pair in result_lst:
+                    output += pair[0] + " : " + (40-len(pair[0]))*" " + pair[1] + "% match" + "\n"
+                        
+            # Show search time
+            timelapse_parallel = time.time() - start_time   
+            output = output + str(timelapse_parallel) + "seconds"            
+
             self.text_result.insert('1.0', output + "\n" )
             
             self.draw_wavform(query_wavsound.get_data(),"cyan","query")
@@ -148,6 +181,7 @@ class application:
             
             self.draw_wavform(top_match_wavsound.get_data(),"white","result")
             
+    # quit application       
     def quit(self):
         self.root.destroy()
         
