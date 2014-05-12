@@ -13,7 +13,8 @@ Requirements
 
 Do you have any screenshots?
 	
-	[link](https://github.com/hyunwookshin/audiosearchengine/tree/master/img/screenshot.png)
+[link](https://github.com/hyunwookshin/audiosearchengine/tree/master/img/screenshot.png)
+
 	screenshot.png is available in img directory
 
 What does your program do?
