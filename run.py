@@ -8,10 +8,10 @@ from calltomapper import calltomapper
 import time
 import os
 
-def run(query, partition, samples, rootdir, max_split):
+def run(query, sample_length, samples, rootdir, max_split):
     
     """ run runs the database search taking three user inputs, the query wav file,
-    number of partitions, and number of partition samples"""
+   sample_length, and number of partition samples"""
     
     
     #Instantiate Wavsound objects from the wav files
@@ -38,7 +38,7 @@ def run(query, partition, samples, rootdir, max_split):
             haystackss[split_db_key].append(haystack(subdir+"/"+file,t_wavsounds[subdir+"/"+file].get_data()[::16]))
             counter += 1
             
-    query_needle_factory = needlestorage(query_wavsound,int(partition),int(samples))
+    query_needle_factory = needlestorage(query_wavsound,sample_length,int(samples))
     
     # Get segments of the query data as needles
     needles = query_needle_factory.get_needles()

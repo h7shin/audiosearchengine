@@ -157,7 +157,7 @@ class application:
             # Database query time
             start_time = time.time()        
             
-            result_lst = run(self.filename, str(partition), samples, self.dbroot, max_split)
+            result_lst = run(self.filename, self.samplelength, samples, self.dbroot, max_split)
             
             # output
             output = "Search Result: \n" 

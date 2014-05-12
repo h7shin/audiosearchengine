@@ -9,7 +9,7 @@ class needlestorage:
     distributed across the wav file) """
     
     needles = []
-    def __init__(self, wavsound, num_chunks, limit):
+    def __init__(self, wavsound, sample_length, limit):
         u=0
         x=0
         self.needles = []
@@ -17,14 +17,13 @@ class needlestorage:
         
         # determine the gap between the starting positions of two consecutive
         # needles (i.e. opposite of degree of overlap)
-        skips_per_neeedle = max(1,int(len(data)/limit))
+        skips_per_neeedle = max(1,sample_length)
         for i in range (len(data)):
             if u >= limit:
                 break
             if (x % skips_per_neeedle == 0):
-                self.needles.append(data[i:i+int(len(data)/num_chunks)])
+                self.needles.append(data[i:i+sample_length])
                 u = u + 1
-                # if debug print (i," <--> ",i+int(len(data)/num_chunks))
             x = x + 1
     def pop_unused_needle(self):
         if len(self.needles) == 0:

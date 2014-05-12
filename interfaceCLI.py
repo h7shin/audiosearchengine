@@ -13,8 +13,7 @@ if __name__ == '__main__':
                 
     print("\n**Higher number of partitions increases false positive rates, \nwhile lower number of partitions increases false negative rates\n")
     samplelength = input("Set word size (sample length) (5 ~ 100) : ");
-    partition = str(int(len(query_wavsound.get_data())/float(samplelength)))
-    samples   = input("Set number of samples (n) of partitions from 1 to " + partition + ": ")
+    samples   = input("Set number of samples (n) of partitions from 1 to " + str(int(len(query_wavsound.get_data())/float(samplelength))) + ": ")
     
     # Database look up directory
     
@@ -24,7 +23,7 @@ if __name__ == '__main__':
     # Database query time
     start_time = time.time()        
             
-    result_lst = run(query, str(partition), samples, dbdir, max_split)
+    result_lst = run(query, int(samplelength), samples, dbdir, max_split)
             
     # output
     output = "Search Result: \n" 
@@ -35,5 +34,5 @@ if __name__ == '__main__':
                         
         # Show search time
         timelapse_parallel = time.time() - start_time   
-        output = output + str(timelapse_parallel) + "seconds"
+    output = output + str(timelapse_parallel) + "seconds"
     print(output)
