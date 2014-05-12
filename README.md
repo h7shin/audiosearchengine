@@ -17,7 +17,7 @@ Do you have any screenshots?
 
 	screenshot.png is available in img directory
 
-What does your program do?
+What does the program do?
 
 	Suppose a student has a recorded section of some audio file, but
 	he/she cannot remember the song name or the ring-tone name. He/she can search
