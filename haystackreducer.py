@@ -1,5 +1,3 @@
-from haystack import haystack
-
 def haystackreducer(emissions):
     """
         haystackreducer is a class responsible for reducing emissions
